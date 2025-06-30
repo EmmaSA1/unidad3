@@ -20,8 +20,13 @@ public class ClientService {
     }
 
     @Transactional(readOnly = true)
-    public APIResponse findById() {
-        return null;
+    public APIResponse findById(Long id) {
+        try {
+            Client client = clientRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+            return new APIResponse("Cliente encontrado", client, false, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new APIResponse(e.getMessage(), true, HttpStatus.NOT_FOUND);
+        }
     }
 
     @Transactional(readOnly = true)
